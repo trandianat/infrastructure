@@ -1,3 +1,4 @@
+import * as apigw from '@aws-cdk/aws-apigateway';
 import * as cdk from '@aws-cdk/core';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as s3 from '@aws-cdk/aws-s3';
@@ -13,7 +14,7 @@ export class InfrastructureStack extends cdk.Stack {
       websiteIndexDocument: 'index.html',
     });
 
-    const deployment = new s3Deployment.BucketDeployment(this, 'deployStaticWebsite', {
+    new s3Deployment.BucketDeployment(this, 'deployStaticWebsite', {
       destinationBucket: bucket,
       sources: [s3Deployment.Source.asset('./src')],
     });
@@ -23,6 +24,10 @@ export class InfrastructureStack extends cdk.Stack {
       handler: 'main.handler',
       memorySize: 1024,
       runtime: lambda.Runtime.NODEJS_12_X,
+    });
+
+    new apigw.LambdaRestApi(this, 'LambdaEndpoint', {
+      handler: handler,
     });
   }
 }
