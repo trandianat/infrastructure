@@ -1,3 +1,3 @@
 exports.handler = () => {
-    console.log('Test');
+    return { response: 'Test!' };
 };
